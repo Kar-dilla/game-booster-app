@@ -16,7 +16,13 @@ jobs:
     - name: Extract Project ZIP
       run: |
         if [ -f project.zip ]; then
-          unzip -o project.zip -d .
+          unzip -o project.zip -d temp_unzip
+          GRADLE_DIR=$(dirname $(find temp_unzip -name "gradlew" -type f | head -n 1))
+          if [ -n "$GRADLE_DIR" ]; then
+            cp -r $GRADLE_DIR/* .
+            cp -r $GRADLE_DIR/.* . 2>/dev/null || true
+          fi
+          rm -rf temp_unzip
         fi
 
     - name: Set up JDK 17
