@@ -38,22 +38,11 @@ jobs:
             with open(filepath, "r") as f:
                 content = f.read()
             
-            # Clean up inline package paths and replace ACTION_BLUETOOTH
-            content = content.replace("android.provider.Settings.ACTION_BLUETOOTH_SETTINGS", "Settings.ACTION_BLUETOOTH_SETTINGS")
-            content = content.replace("ACTION_BLUETOOTH", "Settings.ACTION_BLUETOOTH_SETTINGS")
+            # Replace references directly with the raw Intent string literal to avoid import errors
+            content = content.replace("android.provider.Settings.ACTION_BLUETOOTH_SETTINGS", "\"android.settings.BLUETOOTH_SETTINGS\"")
+            content = content.replace("Settings.ACTION_BLUETOOTH_SETTINGS", "\"android.settings.BLUETOOTH_SETTINGS\"")
+            content = content.replace("ACTION_BLUETOOTH", "\"android.settings.BLUETOOTH_SETTINGS\"")
             
-            # Ensure Settings is properly imported at top of file
-            if "import android.provider.Settings" not in content:
-                lines = content.split("\n")
-                new_lines = []
-                imported = False
-                for line in lines:
-                    new_lines.append(line)
-                    if not imported and line.startswith("package "):
-                        new_lines.append("import android.provider.Settings")
-                        imported = True
-                content = "\n".join(new_lines)
-                
             with open(filepath, "w") as f:
                 f.write(content)
         '
@@ -78,3 +67,4 @@ jobs:
       with:
         name: app-debug
         path: "**/build/outputs/apk/**/*.apk"
+
