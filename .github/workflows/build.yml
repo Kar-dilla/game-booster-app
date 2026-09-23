@@ -29,24 +29,6 @@ jobs:
         fi
         rm -rf temp_unzip
 
-    - name: Patch SessionEngine.kt
-      run: |
-        python3 -c '
-        import glob
-
-        for filepath in glob.glob("**/SessionEngine.kt", recursive=True):
-            with open(filepath, "r") as f:
-                content = f.read()
-            
-            # Replace references directly with the raw Intent string literal to avoid import errors
-            content = content.replace("android.provider.Settings.ACTION_BLUETOOTH_SETTINGS", "\"android.settings.BLUETOOTH_SETTINGS\"")
-            content = content.replace("Settings.ACTION_BLUETOOTH_SETTINGS", "\"android.settings.BLUETOOTH_SETTINGS\"")
-            content = content.replace("ACTION_BLUETOOTH", "\"android.settings.BLUETOOTH_SETTINGS\"")
-            
-            with open(filepath, "w") as f:
-                f.write(content)
-        '
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -67,4 +49,3 @@ jobs:
       with:
         name: app-debug
         path: "**/build/outputs/apk/**/*.apk"
-
