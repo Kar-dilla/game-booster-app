@@ -31,7 +31,32 @@ jobs:
 
     - name: Patch SessionEngine.kt
       run: |
-        find . -name "SessionEngine.kt" -exec sed -i 's/ACTION_BLUETOOTH/android.provider.Settings.ACTION_BLUETOOTH_SETTINGS/g' {} +
+        python3 -c '
+        import glob
+
+        for filepath in glob.glob("**/SessionEngine.kt", recursive=True):
+            with open(filepath, "r") as f:
+                content = f.read()
+            
+            # Clean up inline package paths and replace ACTION_BLUETOOTH
+            content = content.replace("android.provider.Settings.ACTION_BLUETOOTH_SETTINGS", "Settings.ACTION_BLUETOOTH_SETTINGS")
+            content = content.replace("ACTION_BLUETOOTH", "Settings.ACTION_BLUETOOTH_SETTINGS")
+            
+            # Ensure Settings is properly imported at top of file
+            if "import android.provider.Settings" not in content:
+                lines = content.split("\n")
+                new_lines = []
+                imported = False
+                for line in lines:
+                    new_lines.append(line)
+                    if not imported and line.startswith("package "):
+                        new_lines.append("import android.provider.Settings")
+                        imported = True
+                content = "\n".join(new_lines)
+                
+            with open(filepath, "w") as f:
+                f.write(content)
+        '
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
@@ -53,4 +78,3 @@ jobs:
       with:
         name: app-debug
         path: "**/build/outputs/apk/**/*.apk"
-
