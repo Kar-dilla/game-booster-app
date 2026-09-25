@@ -16,6 +16,9 @@ jobs:
       - name: Restore Gradle wrapper jar
         run: cp gradle-wrapper.jar GameBrain/gradle/wrapper/gradle-wrapper.jar
 
+      - name: Make gradlew executable
+        run: chmod +x GameBrain/gradlew
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
