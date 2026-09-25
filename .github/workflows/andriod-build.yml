@@ -16,6 +16,9 @@ jobs:
       - name: Restore Gradle wrapper jar
         run: cp gradle-wrapper.jar GameBrain/gradle/wrapper/gradle-wrapper.jar
 
+      - name: Fix gradlew line endings
+        run: sed -i 's/\r$//' GameBrain/gradlew
+
       - name: Make gradlew executable
         run: chmod +x GameBrain/gradlew
 
