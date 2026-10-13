@@ -25,11 +25,11 @@ jobs:
           gradle-version: '8.7'
 
       - name: Build debug APK
-        working-directory: GameBrain
+        working-directory: TrendulonGameTurbo
         run: gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: gamebrain-debug-apk
-          path: GameBrain/app/build/outputs/apk/debug/*.apk
+          name: trendulon-debug-apk
+          path: TrendulonGameTurbo/app/build/outputs/apk/debug/*.apk
